@@ -7,6 +7,7 @@ Université de Rennes — 2025-2026
 
 ## 1️⃣ Présentation du projet
 Ce projet développe un cadre complet de valorisation et de gestion du risque des options européennes (Call & Put) reposant sur :
+
 ✔ la formule fermée de Black-Scholes-Merton  
 ✔ la simulation de Monte-Carlo en mesure risque-neutre  
 ✔ des stratégies de couverture dynamique :
