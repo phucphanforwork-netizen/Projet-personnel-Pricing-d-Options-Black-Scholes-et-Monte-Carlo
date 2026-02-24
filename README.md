@@ -46,10 +46,10 @@ Période étudiée : **1 an**
 ---
 
 ## 5️⃣ Paramètres de marché
-- Volatilité annualisée : **σ = 34,97 %**  
-- Spot actuel : **S = 67,98 €**  
-- Strike : **K = 70 €**  
-- Taux sans risque (OAT 10 ans) : **r = 3,5 %**  
+- Volatilité annualisée : **σ = 34,91 %**  
+- Spot actuel : **S = 67,96 €**  
+- Strike : **K = 68 €**  
+- Taux sans risque (OAT 10 ans) : **r = 3,44 %**  
 - Maturité : **T = 1 an**
 
 ---
@@ -60,8 +60,8 @@ Période étudiée : **1 an**
 
 | Résultat | Valeur |
 |---------|--------|
-| Prix du Call | **10,48 €** |
-| Prix du Put  | **8,16 €** |
+| Prix du Call | **10,43 €** |
+| Prix du Put  | **8,17 €** |
 ✔ Le prix du Call est **croissant et convexe** en fonction du spot.
 
 ---
@@ -74,8 +74,8 @@ Période étudiée : **1 an**
 
 | Indicateur | Valeur |
 |-----------|--------|
-| Prix estimé MC | **10,4446 €** |
-| IC 95 % | **[10,3350 ; 10,5543]** |
+| Prix estimé MC | **10,415 €** |
+| IC 95 % | **[10,3059 ; 10,524]** |
 
 ➡️ Convergence asymptotique vers Black-Scholes  
 ✔ Loi des grands nombres  
@@ -87,11 +87,11 @@ Période étudiée : **1 an**
 
 | Greek | Interprétation | Valeur |
 |------|----------------|--------|
-| Delta | Sensibilité au spot | **0,6080** |
-| Gamma | Convexité | **0,025572** |
-| Vega  | Sensibilité à la volatilité | **41,3317** |
-| Theta | Décroissance temporelle | **−8,3076** |
-| Rho   | Sensibilité au taux | **30,8510** |
+| Delta | Sensibilité au spot | **0,6076** |
+| Gamma | Convexité | **0,025612** |
+| Vega  | Sensibilité à la volatilité | **41,2938** |
+| Theta | Décroissance temporelle | **−8,2870** |
+| Rho   | Sensibilité au taux | **30,8426** |
 
 **Points clés :**
 ✔ forte dépendance à la volatilité  
@@ -110,8 +110,8 @@ Principe :
 
 | Position | PnL simulé |
 |---------|-----------|
-| Short Call | **−0,0636 €** |
-| Long Call  | **+0,0636 €** |
+| Short Call | **−0,0826 €** |
+| Long Call  | **+0,0826 €** |
 
 📌 Erreur résiduelle = **Gamma + discrétisation**
 
@@ -120,8 +120,8 @@ Ajout d’une seconde option (strike = 1,2K)
 
 | Position | PnL simulé |
 |---------|-----------|
-| Short Call | **+0,0205 €** |
-| Long Call  | **−0,0205 €** |
+| Short Call | **+0,0274 €** |
+| Long Call  | **−0,0274 €** |
 
 ✔ Gamma presque nul  
 ✔ Réduction significative de l’erreur de réplication  
