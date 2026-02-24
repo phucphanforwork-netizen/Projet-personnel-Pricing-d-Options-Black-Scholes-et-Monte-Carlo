@@ -1,5 +1,5 @@
-install.packages("quantmod")  # Collecter les données de Yahoo.finance
-install.packages("ggplot2")   
+install.packages("quantmod")  # Lấy dữ liệu giá cổ phiếu từ Yahoo
+install.packages("ggplot2")   # Vẽ đồ thị đẹp (có thể bỏ, nếu bạn muốn dùng base R)
 
 # ==========================
 # 1) Packages & Données
@@ -14,9 +14,8 @@ library(stats)     # Pour pnorm(), rnorm() etc. (déjà inclus de base)
 # --------------------------
 
 # Retirer les données durant une dernière année:
-date_fin  <- Sys.Date()
-date_debut <- date_fin - 365
-
+date_debut<- as.Date("2024-12-30")
+date_fin   <- as.Date("2025-12-30")
 getSymbols("GLE.PA", src = "yahoo", from = date_debut, to = date_fin, auto.assign = TRUE)
 
 # Objet retourné : GLE.PA (xts)
@@ -56,12 +55,11 @@ pricer_option <- function(S, K, T, r, sigma) {
   # T : maturité en années
   # r : taux sans risque
   # sigma : volatilité annualisée
-  
   d1 <- (log(S / K) + (r + 0.5 * sigma^2) * T) / (sigma * sqrt(T))
   d2 <- d1 - sigma * sqrt(T)
   
   call <- S * pnorm(d1) - K * exp(-r * T) * pnorm(d2)
-  put  <- K * exp(-r * T) * pnorm(-d2) - S * pnorm(-d1)
+  put  <- - S + call + K * exp(-r*T)
   
   return(list(call = call, put = put))
 }
@@ -118,20 +116,17 @@ calcul_delta <- function(S, K, T, r, sigma, type_option = "call") {
 
 # Gamma : même pour Call et Put
 calcul_gamma <- function(S, K, T, r, sigma) {
-  # Si T trop petit -> éviter division par 0
   if (T <= 1e-5) return(0)
   d1 <- (log(S / K) + (r + 0.5 * sigma^2) * T) / (sigma * sqrt(T))
-  gamma <- pnorm(d1) / (S * sigma * sqrt(T))
+  gamma <- dnorm(d1) / (S * sigma * sqrt(T))
   return(gamma)
 }
-
 # Vega : même pour Call et Put
 # Attention : ici Vega = dérivée par rapport à sigma (par "1.00" de volatilité, pas par 1%)
 calcul_vega <- function(S, K, T, r, sigma) {
   if (T <= 1e-5) return(0)
-  
   d1 <- (log(S / K) + (r + 0.5 * sigma^2) * T) / (sigma * sqrt(T))
-  vega <- S * pnorm(d1) * sqrt(T)
+  vega <- S * dnorm(d1) * sqrt(T)
   return(vega)
 }
 
@@ -139,18 +134,16 @@ calcul_vega <- function(S, K, T, r, sigma) {
 # Theta ici est exprimé "par an"
 calcul_theta <- function(S, K, T, r, sigma, type_option = "call") {
   if (T <= 1e-5) return(0)
-  
   d1 <- (log(S / K) + (r + 0.5 * sigma^2) * T) / (sigma * sqrt(T))
   d2 <- d1 - sigma * sqrt(T)
   
-  terme1 <- - (S * pnorm(d1) * sigma) / (2 * sqrt(T))
+  terme1 <- -(S * dnorm(d1) * sigma) / (2 * sqrt(T))
   
   if (type_option == "call") {
     theta <- terme1 - r * K * exp(-r * T) * pnorm(d2)
   } else {
     theta <- terme1 + r * K * exp(-r * T) * pnorm(-d2)
   }
-  
   return(theta)
 }
 
@@ -177,6 +170,7 @@ calcul_rho <- function(S, K, T, r, sigma, type_option = "call") {
 K <- round(S)# Strike
 T_mat <- 1   # Maturité en années
 r <- 0.035    # Taux sans risque annuel (3.5% = Taux OAT) 
+r <- log(1 + r)
 
 # Pricing théorique (Black-Scholes)
 prix_bs <- pricer_option(S, K, T_mat, r, sigma)
@@ -655,7 +649,7 @@ df_gamma <- data.frame(
 
 df_gamma2 <- na.omit(df_gamma)
 
-p6 <- ggplot(df_gamma2, aes(x=t, y=gamma)) +
+p5 <- ggplot(df_gamma2, aes(x=t, y=gamma)) +
   geom_line(color="darkred", size=1) +
   geom_hline(yintercept=0, linetype="dashed") +
   labs(
@@ -689,5 +683,4 @@ print(p2)
 print(p3)
 print(p4)
 print(p5)
-
 print(p6)
